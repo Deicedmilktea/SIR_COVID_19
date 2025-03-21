@@ -2,7 +2,6 @@
 
 该项目实现了经典的 SIR (Susceptible-Infected-Recovered) 流行病数学模型，用于模拟 COVID-19 的传播和控制。项目使用多种数值方法求解 SIR 模型的微分方程组，并对比不同参数设置下的疫情发展趋势。
 
----
 `SIR.py`以及`SIR.ipynb`来自于本人学习模拟测试所得\
 `SIR_example.ipynb`来源于开源项目[covid19-sir](https://github.com/lisphilar/covid19-sir)
 
@@ -13,7 +12,7 @@ SIR 模型将人群分为三个互斥群体：
 - **感染人群 (I)**: 已感染且具有传染性的人群
 - **康复人群 (R)**: 已康复或死亡，不再具有传染性的人群
 
-模型通过以下常微分方程组描述疾病传播动态：\
+模型通过以下常微分方程组描述疾病传播动态：
 $$
 \begin{aligned}
 \frac{dS}{dt} &= -\beta S I \\
@@ -29,7 +28,7 @@ $$
 
 | 参数 | 含义 |
 | --- | --- |
-| $ S $ | (Susceptible) 易感者人数 |
+| $S$ | (Susceptible) 易感者人数 |
 | $ I $ | (Infective) 感染者人数 |
 | $ R $ | (Removal) 恢复者人数 |
 | $ N $ | 总人口数 $ N=S+I+R $ |
