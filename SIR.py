@@ -280,5 +280,48 @@ axes[2].set_ylabel("康复人群 (R)")
 axes[2].legend()
 axes[2].grid(True)
 
+
+# 使用ODEINT方法比较不同的β和γ造成的影响
+# β和γ的值
+betas = [1.5, 1.1, 0.5, 0.5, 0.5]
+gammas = [1 / 14, 1 / 14, 1 / 14, 1 / 10, 1 / 7]
+
+# 求解
+results = []
+for beta, gamma in zip(betas, gammas):
+    result = odeint(sir_model, y0, t, args=(N, beta, gamma))
+    results.append(result)
+
+# 创建三个子图来显示不同β和γ值的影响
+fig, axes = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+
+# 第一子图：易感人群(S)
+for i, result in enumerate(results):
+    S, I, R = result.T
+    axes[0].plot(t, S, label=f"β={betas[i]}, γ={gammas[i]}")
+axes[0].set_ylabel("易感人群 (S)")
+axes[0].legend()
+axes[0].grid(True)
+axes[0].set_title("不同β和γ值对SIR模型的影响")
+
+# 第二子图：感染人群(I)
+for i, result in enumerate(results):
+    S, I, R = result.T
+    axes[1].plot(t, I, label=f"β={betas[i]}, γ={gammas[i]}")
+axes[1].set_ylabel("感染人群 (I)")
+axes[1].legend()
+axes[1].grid(True)
+
+# 第三子图：康复人群(R)
+for i, result in enumerate(results):
+    S, I, R = result.T
+    axes[2].plot(t, R, label=f"β={betas[i]}, γ={gammas[i]}")
+axes[2].set_xlabel("时间 (天)")
+axes[2].set_ylabel("康复人群 (R)")
+axes[2].legend()
+axes[2].grid(True)
+
 plt.tight_layout()
+
+plt.grid(True)
 plt.show()
