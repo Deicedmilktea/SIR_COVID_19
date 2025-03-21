@@ -12,12 +12,11 @@ SIR 模型将人群分为三个互斥群体：
 - **感染人群 (I)**: 已感染且具有传染性的人群
 - **康复人群 (R)**: 已康复或死亡，不再具有传染性的人群
 
-模型通过以下常微分方程组描述疾病传播动态：\
-$$\begin{aligned}
-\frac{dS}{dt} &= -\beta S I \\
-\frac{dI}{dt} &= \beta S  I - \gamma I \\
-\frac{dR}{dt} &= \gamma I
-\end{aligned}$$
+模型通过以下常微分方程组描述疾病传播动态：
+$$\frac{dS}{dt} = -\beta S I$$
+$$\frac{dI}{dt} = \beta S  I - \gamma I$$
+$$\frac{dR}{dt} = \gamma I$$
+
 
 其中：
 - N: 总人口数
