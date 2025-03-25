@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from scipy.integrate import odeint
 
@@ -240,6 +241,7 @@ axes[0].plot(
 axes[0].set_ylabel("易感人群 (S)")
 axes[0].legend()
 axes[0].grid(True)
+axes[0].set_title("SIR模型不同数值方法求解的比较")
 
 # 第二子图：感染人群(I)
 axes[1].plot(t, I, color=colors[0], linestyle=linestyles[0], label=f"{methods[0]} - I")
@@ -279,7 +281,266 @@ axes[2].set_xlabel("时间 (天)")
 axes[2].set_ylabel("康复人群 (R)")
 axes[2].legend()
 axes[2].grid(True)
+plt.tight_layout()
 
+# if no folder 'image', create it
+if not os.path.exists("image"):
+    os.makedirs("image")
+
+# save the figure to folder 'images'
+plt.savefig("image/SIR_model_comparison.png", dpi=300)
+
+############################################
+# 以ODEINT结果为基准，计算其他方法的误差
+# 计算绝对误差
+S_euler_error = np.abs(S - S_euler)
+I_euler_error = np.abs(I - I_euler)
+R_euler_error = np.abs(R - R_euler)
+
+S_improved_euler_error = np.abs(S - S_improved_euler)
+I_improved_euler_error = np.abs(I - I_improved_euler)
+R_improved_euler_error = np.abs(R - R_improved_euler)
+
+S_rk4_error = np.abs(S - S_rk4)
+I_rk4_error = np.abs(I - I_rk4)
+R_rk4_error = np.abs(R - R_rk4)
+
+# 计算相对误差 (百分比)
+# 防止除零错误，添加一个很小的值
+epsilon = 1e-10
+S_euler_rel_error = S_euler_error / (np.abs(S) + epsilon) * 100
+I_euler_rel_error = I_euler_error / (np.abs(I) + epsilon) * 100
+R_euler_rel_error = R_euler_error / (np.abs(R) + epsilon) * 100
+
+S_improved_euler_rel_error = S_improved_euler_error / (np.abs(S) + epsilon) * 100
+I_improved_euler_rel_error = I_improved_euler_error / (np.abs(I) + epsilon) * 100
+R_improved_euler_rel_error = R_improved_euler_error / (np.abs(R) + epsilon) * 100
+
+S_rk4_rel_error = S_rk4_error / (np.abs(S) + epsilon) * 100
+I_rk4_rel_error = I_rk4_error / (np.abs(I) + epsilon) * 100
+R_rk4_rel_error = R_rk4_error / (np.abs(R) + epsilon) * 100
+
+# 计算最大误差和平均误差
+max_errors = {
+    "Euler": {
+        "S": np.max(S_euler_error),
+        "I": np.max(I_euler_error),
+        "R": np.max(R_euler_error),
+    },
+    "Improved Euler": {
+        "S": np.max(S_improved_euler_error),
+        "I": np.max(I_improved_euler_error),
+        "R": np.max(R_improved_euler_error),
+    },
+    "RK4": {
+        "S": np.max(S_rk4_error),
+        "I": np.max(I_rk4_error),
+        "R": np.max(R_rk4_error),
+    },
+}
+
+avg_errors = {
+    "Euler": {
+        "S": np.mean(S_euler_error),
+        "I": np.mean(I_euler_error),
+        "R": np.mean(R_euler_error),
+    },
+    "Improved Euler": {
+        "S": np.mean(S_improved_euler_error),
+        "I": np.mean(I_improved_euler_error),
+        "R": np.mean(R_improved_euler_error),
+    },
+    "RK4": {
+        "S": np.mean(S_rk4_error),
+        "I": np.mean(I_rk4_error),
+        "R": np.mean(R_rk4_error),
+    },
+}
+
+# 打印最大误差和平均误差
+print("最大绝对误差:")
+for method, errors in max_errors.items():
+    print(f"{method}: S={errors['S']:.2f}, I={errors['I']:.2f}, R={errors['R']:.2f}")
+
+print("\n平均绝对误差:")
+for method, errors in avg_errors.items():
+    print(f"{method}: S={errors['S']:.2f}, I={errors['I']:.2f}, R={errors['R']:.2f}")
+
+# 创建三个子图展示绝对误差
+fig, axes = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+
+# 第一子图：易感人群(S)误差
+axes[0].plot(
+    t,
+    S_euler_error,
+    color=colors[1],
+    linestyle=linestyles[1],
+    label=f"{methods[1]} - S 误差",
+)
+axes[0].plot(
+    t,
+    S_improved_euler_error,
+    color=colors[2],
+    linestyle=linestyles[2],
+    label=f"{methods[2]} - S 误差",
+)
+axes[0].plot(
+    t,
+    S_rk4_error,
+    color=colors[3],
+    linestyle=linestyles[3],
+    label=f"{methods[3]} - S 误差",
+)
+axes[0].set_ylabel("易感人群 (S) 绝对误差")
+axes[0].legend()
+axes[0].grid(True)
+axes[0].set_title("不同数值方法与ODEINT的绝对误差比较")
+
+# 第二子图：感染人群(I)误差
+axes[1].plot(
+    t,
+    I_euler_error,
+    color=colors[1],
+    linestyle=linestyles[1],
+    label=f"{methods[1]} - I 误差",
+)
+axes[1].plot(
+    t,
+    I_improved_euler_error,
+    color=colors[2],
+    linestyle=linestyles[2],
+    label=f"{methods[2]} - I 误差",
+)
+axes[1].plot(
+    t,
+    I_rk4_error,
+    color=colors[3],
+    linestyle=linestyles[3],
+    label=f"{methods[3]} - I 误差",
+)
+axes[1].set_ylabel("感染人群 (I) 绝对误差")
+axes[1].legend()
+axes[1].grid(True)
+
+# 第三子图：康复人群(R)误差
+axes[2].plot(
+    t,
+    R_euler_error,
+    color=colors[1],
+    linestyle=linestyles[1],
+    label=f"{methods[1]} - R 误差",
+)
+axes[2].plot(
+    t,
+    R_improved_euler_error,
+    color=colors[2],
+    linestyle=linestyles[2],
+    label=f"{methods[2]} - R 误差",
+)
+axes[2].plot(
+    t,
+    R_rk4_error,
+    color=colors[3],
+    linestyle=linestyles[3],
+    label=f"{methods[3]} - R 误差",
+)
+axes[2].set_xlabel("时间 (天)")
+axes[2].set_ylabel("康复人群 (R) 绝对误差")
+axes[2].legend()
+axes[2].grid(True)
+
+plt.tight_layout()
+
+# save the figure to folder 'images'
+plt.savefig("image/SIR_model_comparison_error.png", dpi=300)
+
+# 创建三个子图展示相对误差(%)
+fig, axes = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+
+# 第一子图：易感人群(S)相对误差
+axes[0].plot(
+    t,
+    S_euler_rel_error,
+    color=colors[1],
+    linestyle=linestyles[1],
+    label=f"{methods[1]} - S 相对误差",
+)
+axes[0].plot(
+    t,
+    S_improved_euler_rel_error,
+    color=colors[2],
+    linestyle=linestyles[2],
+    label=f"{methods[2]} - S 相对误差",
+)
+axes[0].plot(
+    t,
+    S_rk4_rel_error,
+    color=colors[3],
+    linestyle=linestyles[3],
+    label=f"{methods[3]} - S 相对误差",
+)
+axes[0].set_ylabel("易感人群 (S) 相对误差 (%)")
+axes[0].legend()
+axes[0].grid(True)
+axes[0].set_title("不同数值方法与ODEINT的相对误差比较 (%)")
+
+# 第二子图：感染人群(I)相对误差
+axes[1].plot(
+    t,
+    I_euler_rel_error,
+    color=colors[1],
+    linestyle=linestyles[1],
+    label=f"{methods[1]} - I 相对误差",
+)
+axes[1].plot(
+    t,
+    I_improved_euler_rel_error,
+    color=colors[2],
+    linestyle=linestyles[2],
+    label=f"{methods[2]} - I 相对误差",
+)
+axes[1].plot(
+    t,
+    I_rk4_rel_error,
+    color=colors[3],
+    linestyle=linestyles[3],
+    label=f"{methods[3]} - I 相对误差",
+)
+axes[1].set_ylabel("感染人群 (I) 相对误差 (%)")
+axes[1].legend()
+axes[1].grid(True)
+
+# 第三子图：康复人群(R)相对误差
+axes[2].plot(
+    t,
+    R_euler_rel_error,
+    color=colors[1],
+    linestyle=linestyles[1],
+    label=f"{methods[1]} - R 相对误差",
+)
+axes[2].plot(
+    t,
+    R_improved_euler_rel_error,
+    color=colors[2],
+    linestyle=linestyles[2],
+    label=f"{methods[2]} - R 相对误差",
+)
+axes[2].plot(
+    t,
+    R_rk4_rel_error,
+    color=colors[3],
+    linestyle=linestyles[3],
+    label=f"{methods[3]} - R 相对误差",
+)
+axes[2].set_xlabel("时间 (天)")
+axes[2].set_ylabel("康复人群 (R) 相对误差 (%)")
+axes[2].legend()
+axes[2].grid(True)
+
+plt.tight_layout()
+
+# save the figure to folder 'images'
+plt.savefig("image/SIR_model_comparison_rel_error.png", dpi=300)
 
 # 使用ODEINT方法比较不同的β和γ造成的影响
 # β和γ的值
@@ -322,6 +583,9 @@ axes[2].legend()
 axes[2].grid(True)
 
 plt.tight_layout()
+
+# save the figure to folder 'images'
+plt.savefig("image/SIR_model_beta_gamma.png", dpi=300)
 
 plt.grid(True)
 plt.show()

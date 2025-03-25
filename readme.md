@@ -18,7 +18,6 @@ $$\frac{dI}{dt} = \beta S I - \gamma I$$
 $$\frac{dR}{dt} = \gamma I$$
 
 
-
 其中：
 - N: 总人口数
 - β: 传染率/接触率（有效接触率 = 传播概率 * 接触率）
@@ -54,6 +53,8 @@ $$\frac{dR}{dt} = \gamma I$$
 3. **改进的 Euler 法**: 二阶 Runge-Kutta 方法
 4. **RK4 法**: 四阶 Runge-Kutta 方法
 
+![四种方法对比](./image/SIR_model_comparison.png)
+
 ## 参数设置
 
 基本参数设置：
@@ -78,10 +79,94 @@ $$\frac{dR}{dt} = \gamma I$$
 | 0.5 | 1/10 |
 | 0.5 | 1/7  |
 
+`β`是传播率，可以描述隔离措施的强度，数值递减，模拟隔离措施逐渐加强  
+`γ`是康复率，可以描述医疗治愈的水平，数值递增，模拟医疗水平逐渐提高
+
+![不同 β 和 γ 值对疫情传播的影响](./image/SIR_model_beta_gamma.png)
+
+## 误差分析
+在本项目中，我们对比了三种数值方法（Euler 法、改进的 Euler 法和 RK4 法）相对于ODEINT法求解 SIR 模型的误差，分别为绝对误差和相对误差：
+
+![绝对误差分析](.\image/SIR_model_comparison_error.png)
+![相对误差分析](.\image/SIR_model_comparison_rel_error.png)
+
+从误差分析中可以看出，RK4 方法通常提供最高精度的结果，而 Euler 法的误差相对较大。改进的 Euler 法在精度和计算复杂度之间提供了一个折中方案。
+
 ## 文件说明
 
 - `SIR.py`: Python 脚本实现 SIR 模型的求解与可视化
 - `SIR.ipynb`: Jupyter Notebook，与 Python 脚本功能相同，方便交互式操作
+
+## 实际数据测试
+
+在本项目中，我们使用了 `SIR_example.ipynb` 来测试实际数据。数据集来源于[Kaggle](https://www.kaggle.com/datasets/lisphilar/covid19-dataset-in-japan)，计算方法参考开源项目 [covid19-sir](https://github.com/lisphilar/covid19-sir)，并进行了以下步骤：
+
+1. **数据准备**: 使用 `covsirphy` 库自动构建日本的 SIR-F 模型。
+$$\begin{aligned}\frac{dS}{dt} = -\beta S I\end{aligned}$$  
+$$\frac{dI}{dt} = \beta S I - (\gamma + \alpha) I$$  
+$$\frac{dR}{dt} = \gamma I$$
+$$\frac{dF}{dt} = \alpha I$$
+2. **实际记录检查**: 模拟并检查实际记录。
+3. **时间序列分割**: 显示时间序列分割结果。
+4. **参数估计**: 使用 SIR-F 模型估计 ODE 参数值，并进行模拟。  
+    这里我们使用了最小二乘法（Least Squares Method）进行参数估计。
+5. **参数预测**: 预测未来 30 天的 ODE 参数值，并进行模拟。
+6. **未来阶段添加**: 添加未来阶段，并显示创建的阶段和 ODE 参数值。
+7. **参数比较**: 比较不同场景下的再生数（Rt）。
+$$\begin{aligned}R_t = \frac{\beta(t)}{\gamma(t)}\end{aligned}$$
+8. **病例比较**: 比较模拟的确诊病例数。
+9. **描述代表值**: 描述代表值。
+
+通过这些步骤，我们能够验证模型在实际数据上的表现，并进行参数调整和预测。
+
+```python
+import covsirphy as cs
+
+# 数据准备，时间序列分割，参数估计与 SIR-F 模型
+snr = cs.ODEScenario.auto_build(geo="Japan", model=cs.SIRFModel)
+
+# 检查实际记录
+snr.simulate(name=None)
+
+# 显示时间序列分割结果
+snr.to_dynamics(name="Baseline").detect()
+
+# 使用估计的 ODE 参数值进行模拟
+snr.simulate(name="Baseline")
+
+# 预测未来 30 天的 ODE 参数值
+snr.build_with_template(name="Predicted", template="Baseline")
+snr.predict(days=30, name="Predicted")
+
+# 使用估计和预测的 ODE 参数值进行模拟
+snr.simulate(name="Predicted")
+
+# 添加未来阶段
+snr.append()
+
+# 显示创建的阶段和 ODE 参数值
+snr.summary()
+
+# 比较再生数（Rt）
+snr.compare_param("Rt")
+
+# 比较模拟的确诊病例数
+snr.compare_cases("Confirmed")
+
+# 描述代表值
+snr.describe()
+```
+
+通过上述代码，我们可以对实际数据进行建模和分析，验证 SIR 模型的有效性。
+
+![](./image/Japan_actual_number.png)
+根据实际数据，我们可以看到确诊病例数随时间的变化趋势。
+![](./image/Japan_baseline.png)
+根据 SIR-F 模型的模拟结果，我们可以看到模型对实际数据的拟合效果。
+![](./image/Japan_predicted.png)
+根据 SIR-F 模型的预测结果，我们可以看到未来 30 天的预测情况。
+![](./image/Japan_comparison.png)
+根据 SIR-F 模型的参数比较，我们可以看到模拟以及预测数据相对于实际数据的差异。
 
 ## 运行要求
 
