@@ -103,7 +103,7 @@ $$\frac{dR}{dt} = \gamma I$$
 
 1. **数据准备**: 使用 `covsirphy` 库自动构建日本的 SIR-F 模型。  
 $$
-{\frac{dS}{dt} = -\beta S I}
+\frac{dS}{dt} = -\beta S I
 $$  
 $$\frac{dI}{dt} = \beta S I - (\gamma + \alpha) I$$  
 $$\frac{dR}{dt} = \gamma I$$  
