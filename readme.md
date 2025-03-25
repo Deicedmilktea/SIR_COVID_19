@@ -102,9 +102,7 @@ $$\frac{dR}{dt} = \gamma I$$
 在本项目中，我们使用了 `SIR_example.ipynb` 来测试实际数据。数据集来源于[Kaggle](https://www.kaggle.com/datasets/lisphilar/covid19-dataset-in-japan)，计算方法参考开源项目 [covid19-sir](https://github.com/lisphilar/covid19-sir)，并进行了以下步骤：
 
 1. **数据准备**: 使用 `covsirphy` 库自动构建日本的 SIR-F 模型。  
-$$
-\frac{dS}{dt} = -\beta S I
-$$  
+$$\frac{dS}{dt} = -\beta S I$$  
 $$\frac{dI}{dt} = \beta S I - (\gamma + \alpha) I$$  
 $$\frac{dR}{dt} = \gamma I$$  
 $$\frac{dF}{dt} = \alpha I$$
@@ -115,9 +113,7 @@ $$\frac{dF}{dt} = \alpha I$$
 5. **参数预测**: 预测未来 30 天的 ODE 参数值，并进行模拟。
 6. **未来阶段添加**: 添加未来阶段，并显示创建的阶段和 ODE 参数值。
 7. **参数比较**: 比较不同场景下的再生数（Rt）。
-$$
-R_t = \frac{\beta(t)}{\gamma(t)}
-$$
+$$R_t = \frac{\beta(t)}{\gamma(t)}$$
 8. **病例比较**: 比较模拟的确诊病例数。
 9. **描述代表值**: 描述代表值。
 
@@ -205,7 +201,3 @@ python SIR.py
 - 较高的 β 值导致更快的传播速度和更高峰值的感染人数
 - 较高的 γ 值（更短的传染期）导致更快的疫情消退
 - 当 β/γ < 1 时，疫情将不会导致大范围传播
-
-$$
-{\color{Blue}x^2}+{\color{Orange}2x}-{\color{LimeGreen}1}
-$$
