@@ -13,7 +13,7 @@ SIR 模型将人群分为三个互斥群体：
 - **康复人群 (R)**: 已康复或死亡，不再具有传染性的人群
 
 模型通过以下常微分方程组描述疾病传播动态：  
-$$\begin{aligned}\frac{dS}{dt} = -\beta S I\end{aligned}$$  
+$$\frac{dS}{dt} = -\beta S I$$  
 $$\frac{dI}{dt} = \beta S I - \gamma I$$  
 $$\frac{dR}{dt} = \gamma I$$
 
@@ -104,7 +104,7 @@ $$\frac{dR}{dt} = \gamma I$$
 1. **数据准备**: 使用 `covsirphy` 库自动构建日本的 SIR-F 模型。  
 $$\frac{dS}{dt} = -\beta S I$$  
 $$\frac{dI}{dt} = \beta S I - (\gamma + \alpha) I$$  
-$$\frac{dR}{dt} = \gamma I$$
+$$\frac{dR}{dt} = \gamma I$$  
 $$\frac{dF}{dt} = \alpha I$$
 2. **实际记录检查**: 模拟并检查实际记录。
 3. **时间序列分割**: 显示时间序列分割结果。
@@ -113,7 +113,7 @@ $$\frac{dF}{dt} = \alpha I$$
 5. **参数预测**: 预测未来 30 天的 ODE 参数值，并进行模拟。
 6. **未来阶段添加**: 添加未来阶段，并显示创建的阶段和 ODE 参数值。
 7. **参数比较**: 比较不同场景下的再生数（Rt）。  
-$$\begin{aligned}R_t = \frac{\beta(t)}{\gamma(t)}\end{aligned}$$
+$$R_t = \frac{\beta(t)}{\gamma(t)}$$
 8. **病例比较**: 比较模拟的确诊病例数。
 9. **描述代表值**: 描述代表值。
 
