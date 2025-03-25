@@ -87,8 +87,8 @@ $$\frac{dR}{dt} = \gamma I$$
 ## 误差分析
 在本项目中，我们对比了三种数值方法（Euler 法、改进的 Euler 法和 RK4 法）相对于ODEINT法求解 SIR 模型的误差，分别为绝对误差和相对误差：
 
-![绝对误差分析](.\image/SIR_model_comparison_error.png)
-![相对误差分析](.\image/SIR_model_comparison_rel_error.png)
+![](./image/SIR_model_comparison_error.png)
+![](./image/SIR_model_comparison_rel_error.png)
 
 从误差分析中可以看出，RK4 方法通常提供最高精度的结果，而 Euler 法的误差相对较大。改进的 Euler 法在精度和计算复杂度之间提供了一个折中方案。
 
@@ -101,8 +101,8 @@ $$\frac{dR}{dt} = \gamma I$$
 
 在本项目中，我们使用了 `SIR_example.ipynb` 来测试实际数据。数据集来源于[Kaggle](https://www.kaggle.com/datasets/lisphilar/covid19-dataset-in-japan)，计算方法参考开源项目 [covid19-sir](https://github.com/lisphilar/covid19-sir)，并进行了以下步骤：
 
-1. **数据准备**: 使用 `covsirphy` 库自动构建日本的 SIR-F 模型。
-$$\begin{aligned}\frac{dS}{dt} = -\beta S I\end{aligned}$$  
+1. **数据准备**: 使用 `covsirphy` 库自动构建日本的 SIR-F 模型。  
+$$\frac{dS}{dt} = -\beta S I$$  
 $$\frac{dI}{dt} = \beta S I - (\gamma + \alpha) I$$  
 $$\frac{dR}{dt} = \gamma I$$
 $$\frac{dF}{dt} = \alpha I$$
@@ -112,8 +112,8 @@ $$\frac{dF}{dt} = \alpha I$$
     这里我们使用了最小二乘法（Least Squares Method）进行参数估计。
 5. **参数预测**: 预测未来 30 天的 ODE 参数值，并进行模拟。
 6. **未来阶段添加**: 添加未来阶段，并显示创建的阶段和 ODE 参数值。
-7. **参数比较**: 比较不同场景下的再生数（Rt）。
-$$\begin{aligned}R_t = \frac{\beta(t)}{\gamma(t)}\end{aligned}$$
+7. **参数比较**: 比较不同场景下的再生数（Rt）。  
+$$R_t = \frac{\beta(t)}{\gamma(t)}$$
 8. **病例比较**: 比较模拟的确诊病例数。
 9. **描述代表值**: 描述代表值。
 
