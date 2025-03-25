@@ -102,7 +102,9 @@ $$\frac{dR}{dt} = \gamma I$$
 在本项目中，我们使用了 `SIR_example.ipynb` 来测试实际数据。数据集来源于[Kaggle](https://www.kaggle.com/datasets/lisphilar/covid19-dataset-in-japan)，计算方法参考开源项目 [covid19-sir](https://github.com/lisphilar/covid19-sir)，并进行了以下步骤：
 
 1. **数据准备**: 使用 `covsirphy` 库自动构建日本的 SIR-F 模型。  
-$$\frac{dS}{dt} = -\beta S I$$  
+$$
+{\frac{dS}{dt} = -\beta S I}
+$$  
 $$\frac{dI}{dt} = \beta S I - (\gamma + \alpha) I$$  
 $$\frac{dR}{dt} = \gamma I$$  
 $$\frac{dF}{dt} = \alpha I$$
